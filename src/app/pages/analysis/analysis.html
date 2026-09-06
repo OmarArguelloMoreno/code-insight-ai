@@ -1,0 +1,633 @@
+<div class="analysis-container">
+
+  <!-- =========================================================
+       ENCABEZADO
+       ========================================================= -->
+
+  <header class="page-header">
+
+    <div class="brand-section">
+
+      <div class="brand-icon">
+        CI
+      </div>
+
+      <div>
+        <h1>Code Insight AI</h1>
+
+        <p class="subtitle">
+          Ingeniería inversa automatizada de repositorios
+        </p>
+      </div>
+
+    </div>
+
+    <span class="status-badge">
+      Análisis estático
+    </span>
+
+  </header>
+
+
+  <!-- =========================================================
+       CARGA DEL REPOSITORIO
+       ========================================================= -->
+
+  <section class="upload-card">
+
+    <div class="upload-header">
+
+      <div>
+        <span class="section-label">
+          REPOSITORIO
+        </span>
+
+        <h2>Analizar repositorio</h2>
+
+        <p>
+          Selecciona un archivo ZIP para iniciar el análisis.
+        </p>
+      </div>
+
+    </div>
+
+
+    <div class="upload-content">
+
+      <div class="upload-area">
+
+        <div class="upload-icon">
+          ZIP
+        </div>
+
+        <div>
+
+          <h3>Selecciona tu repositorio</h3>
+
+          <p>
+            El archivo debe estar comprimido en formato
+            <strong>.zip</strong>.
+          </p>
+
+          <input
+            id="repositoryFile"
+            type="file"
+            accept=".zip"
+            (change)="onFileSelected($event)"
+          />
+
+          <label
+            for="repositoryFile"
+            class="file-button">
+
+            Seleccionar archivo
+
+          </label>
+
+        </div>
+
+      </div>
+
+
+      <!-- Archivo seleccionado -->
+
+      <div
+        class="selected-file"
+        *ngIf="selectedFile">
+
+        <div class="file-info">
+
+          <span class="file-icon">
+            ZIP
+          </span>
+
+          <div>
+
+            <span>Repositorio seleccionado</span>
+
+            <strong>
+              {{ selectedFile.name }}
+            </strong>
+
+          </div>
+
+        </div>
+
+      </div>
+
+
+      <!-- Botón -->
+
+      <button
+        type="button"
+        class="analyze-button"
+        [disabled]="!selectedFile || loading"
+        (click)="analyzeRepository()">
+
+        {{ loading ? 'Analizando repositorio...' : 'Analizar repositorio' }}
+
+      </button>
+
+
+      <!-- Loading -->
+
+      <div
+        class="loading-message"
+        *ngIf="loading">
+
+        <span class="spinner"></span>
+
+        Procesando repositorio...
+
+      </div>
+
+
+      <!-- Error -->
+
+      <div
+        class="error-message"
+        *ngIf="errorMessage">
+
+        <strong>Error</strong>
+
+        <span>
+          {{ errorMessage }}
+        </span>
+
+      </div>
+
+    </div>
+
+  </section>
+
+
+  <!-- =========================================================
+       RESULTADOS
+       ========================================================= -->
+
+  <section
+    class="results"
+    *ngIf="analysis">
+
+
+    <!-- =======================================================
+         CABECERA RESULTADOS
+         ======================================================= -->
+
+    <div class="results-header">
+
+      <div>
+
+        <span class="section-label">
+          RESULTADOS
+        </span>
+
+        <h2>
+          Análisis del repositorio
+        </h2>
+
+      </div>
+
+      <div class="project-name">
+
+        <span>Proyecto</span>
+
+        <strong>
+          {{ analysis.projectName }}
+        </strong>
+
+      </div>
+
+    </div>
+
+
+    <!-- =======================================================
+         TABS
+         ======================================================= -->
+
+    <div class="tabs">
+
+    <button
+        type="button"
+        class="tab"
+        [class.active]="activeTab === 'resumen'"
+        (click)="selectTab('resumen')">
+
+        Resumen
+
+    </button>
+
+
+    <button
+        type="button"
+        class="tab"
+        [class.active]="activeTab === 'componentes'"
+        (click)="selectTab('componentes')">
+
+        Componentes
+
+    </button>
+
+
+    <button
+        type="button"
+        class="tab"
+        [class.active]="activeTab === 'persistencia'"
+        (click)="selectTab('persistencia')">
+
+        Persistencia
+
+    </button>
+
+
+    <button
+        type="button"
+        class="tab"
+        [class.active]="activeTab === 'apis'"
+        (click)="selectTab('apis')">
+
+        APIs
+
+    </button>
+
+
+    <button
+        type="button"
+        class="tab"
+        [class.active]="activeTab === 'evidencias'"
+        (click)="selectTab('evidencias')">
+
+        Evidencias
+
+    </button>
+
+
+    <button
+        type="button"
+        class="tab"
+        [class.active]="activeTab === 'hallazgos'"
+        (click)="selectTab('hallazgos')">
+
+        Hallazgos
+
+    </button>
+
+
+    <button
+        type="button"
+        class="tab"
+        [class.active]="activeTab === 'riesgos'"
+        (click)="selectTab('riesgos')">
+
+        Riesgos
+
+    </button>
+
+    </div>
+
+
+    <!-- =======================================================
+         CONTENIDO ACTUAL
+         
+         Por ahora dejamos visible el resumen.
+         En el siguiente paso conectaremos los tabs
+         con una variable en analysis.ts.
+         ======================================================= -->
+
+    <div class="tab-content">
+
+    <!-- =========================================================
+        TAB: RESUMEN
+        ========================================================= -->
+
+    <div
+        class="tab-panel"
+        *ngIf="activeTab === 'resumen'">
+
+        <div class="summary-grid">
+
+        <div class="info-card">
+
+            <span>Lenguaje principal</span>
+
+            <strong>
+            {{ analysis.primaryLanguage }}
+            </strong>
+
+        </div>
+
+        <div class="info-card">
+
+            <span>Framework</span>
+
+            <strong>
+            {{ analysis.primaryFramework }}
+            </strong>
+
+        </div>
+
+        <div class="info-card architecture">
+
+            <span>Arquitectura</span>
+
+            <strong>
+            {{ analysis.architecture }}
+            </strong>
+
+        </div>
+
+        <div class="info-card">
+
+            <span>Total archivos</span>
+
+            <strong>
+            {{ analysis.fileCount }}
+            </strong>
+
+        </div>
+
+        </div>
+
+
+        <div class="description-block">
+
+        <h3>Descripción funcional</h3>
+
+        <p>
+            {{ analysis.functionalDescription }}
+        </p>
+
+        </div>
+
+
+        <div class="quick-metrics">
+
+        <div class="metric">
+            <strong>{{ analysis.controllerCount }}</strong>
+            <span>Controllers</span>
+        </div>
+
+        <div class="metric">
+            <strong>{{ analysis.serviceCount }}</strong>
+            <span>Services</span>
+        </div>
+
+        <div class="metric">
+            <strong>{{ analysis.repositoryCount }}</strong>
+            <span>Repositories</span>
+        </div>
+
+        <div class="metric">
+            <strong>{{ analysis.modelCount }}</strong>
+            <span>Models</span>
+        </div>
+
+        <div class="metric">
+            <strong>{{ analysis.angularComponentCount }}</strong>
+            <span>Angular</span>
+        </div>
+
+        <div class="metric">
+            <strong>{{ analysis.apiEndpointCount }}</strong>
+            <span>Endpoints</span>
+        </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+        TAB: COMPONENTES
+        ========================================================= -->
+
+    <div
+        class="tab-panel"
+        *ngIf="activeTab === 'componentes'">
+
+        <h3>Componentes identificados</h3>
+
+        <div class="detail-grid">
+
+        <div>
+            <span>Controllers</span>
+            <strong>{{ analysis.controllerCount }}</strong>
+        </div>
+
+        <div>
+            <span>Services</span>
+            <strong>{{ analysis.serviceCount }}</strong>
+        </div>
+
+        <div>
+            <span>Repositories</span>
+            <strong>{{ analysis.repositoryCount }}</strong>
+        </div>
+
+        <div>
+            <span>Models / Entities</span>
+            <strong>{{ analysis.modelCount }}</strong>
+        </div>
+
+        <div>
+            <span>Angular Components</span>
+            <strong>{{ analysis.angularComponentCount }}</strong>
+        </div>
+
+        <div>
+            <span>API Endpoints</span>
+            <strong>{{ analysis.apiEndpointCount }}</strong>
+        </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+        TAB: PERSISTENCIA
+        ========================================================= -->
+
+    <div
+        class="tab-panel"
+        *ngIf="activeTab === 'persistencia'">
+
+        <h3>Tecnologías de persistencia</h3>
+
+        <ul
+        *ngIf="analysis.persistenceTechnologies && analysis.persistenceTechnologies.length > 0">
+
+        <li
+            *ngFor="let technology of analysis.persistenceTechnologies">
+
+            {{ technology }}
+
+        </li>
+
+        </ul>
+
+        <p
+        class="empty-message"
+        *ngIf="analysis.persistenceTechnologies?.length === 0">
+
+        No se identificaron tecnologías de persistencia.
+
+        </p>
+
+
+        <h3>Bases de datos</h3>
+
+        <ul
+        *ngIf="analysis.databases?.length === 0">
+
+        <li
+            *ngFor="let database of analysis.databases">
+
+            {{ database }}
+
+        </li>
+
+        </ul>
+
+        <p
+        class="empty-message"
+        *ngIf="analysis.databases.length === 0">
+
+        No se identificaron bases de datos.
+
+        </p>
+
+    </div>
+
+
+    <!-- =========================================================
+        TAB: APIS
+        ========================================================= -->
+
+    <div
+        class="tab-panel"
+        *ngIf="activeTab === 'apis'">
+
+        <h3>APIs consumidas</h3>
+
+        <ul
+        class="api-list"
+        *ngIf="analysis.consumedApis?.length === 0">
+
+        <li
+            *ngFor="let api of analysis.consumedApis">
+
+            <code>
+            {{ api }}
+            </code>
+
+        </li>
+
+        </ul>
+
+        <p
+        class="empty-message"
+        *ngIf="analysis.consumedApis.length === 0">
+
+        No se identificaron APIs consumidas.
+
+        </p>
+
+    </div>
+
+
+    <!-- =========================================================
+        TAB: EVIDENCIAS
+        ========================================================= -->
+
+    <div
+        class="tab-panel"
+        *ngIf="activeTab === 'evidencias'">
+
+        <h3>Evidencias del análisis</h3>
+
+        <p class="tab-description">
+        Evidencias utilizadas para inferir tecnologías
+        y arquitectura del repositorio.
+        </p>
+
+        <ul class="evidence-list">
+
+        <li
+            *ngFor="let evidence of analysis.evidence">
+
+            {{ evidence }}
+
+        </li>
+
+        </ul>
+
+    </div>
+
+
+    <!-- =========================================================
+        TAB: HALLAZGOS
+        ========================================================= -->
+
+    <div
+        class="tab-panel"
+        *ngIf="activeTab === 'hallazgos'">
+
+        <h3>Hallazgos</h3>
+
+        <ul>
+
+        <li
+            *ngFor="let finding of analysis.findings">
+
+            {{ finding }}
+
+        </li>
+
+        </ul>
+
+
+        <h3>Recomendaciones</h3>
+
+        <ul>
+
+        <li
+            *ngFor="let recommendation of analysis.recommendations">
+
+            {{ recommendation }}
+
+        </li>
+
+        </ul>
+
+    </div>
+
+
+    <!-- =========================================================
+        TAB: RIESGOS
+        ========================================================= -->
+
+    <div
+        class="tab-panel risk-section"
+        *ngIf="activeTab === 'riesgos'">
+
+        <h3>Riesgos identificados</h3>
+
+        <ul>
+
+        <li
+            *ngFor="let risk of analysis.risks">
+
+            {{ risk }}
+
+        </li>
+
+        </ul>
+
+    </div>
+
+    </div>
+
+  </section>
+
+</div>
