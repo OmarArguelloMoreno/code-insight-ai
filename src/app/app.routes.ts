@@ -32,6 +32,20 @@ export const routes: Routes = [
     path: 'analysis',
     loadComponent: () =>
       import('./pages/analysis/analysis').then(m => m.Analysis)
-  }
+  },
+
+  // TCC - Gestión de Guías
+  {
+    path: 'guias',
+    loadComponent: () =>
+      import('./pages/guias/guias').then(m => m.Guias)
+  },
+
+  {
+  path: 'notificaciones',
+  loadComponent: () =>
+    import('./pages/notificaciones/notificaciones')
+      .then(m => m.Notificaciones)
+}
 
 ];

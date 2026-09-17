@@ -1,0 +1,294 @@
+<div class="page">
+
+  <div class="header">
+    <h1>Gestión de Guías</h1>
+    <p>Creación, consulta, estados e historial</p>
+  </div>
+
+  <!-- PESTAÑAS -->
+  <div class="tabs">
+
+    <button
+      type="button"
+      [class.active]="pestana === 'crear'"
+      (click)="cambiarPestana('crear')">
+      Crear / Consultar
+    </button>
+
+    <button
+      type="button"
+      [class.active]="pestana === 'estado'"
+      (click)="cambiarPestana('estado')">
+      Cambiar estado
+    </button>
+
+    <button
+      type="button"
+      [class.active]="pestana === 'historial'"
+      (click)="cambiarPestana('historial')">
+      Historial
+    </button>
+
+  </div>
+
+
+  <!-- =========================
+       CREAR / CONSULTAR
+       ========================= -->
+
+  <div
+    class="search-card"
+    *ngIf="pestana === 'crear'">
+
+    <div class="field">
+
+      <label>Número de guía</label>
+
+      <input
+        type="text"
+        [(ngModel)]="numeroGuia"
+        placeholder="Ingrese el número de guía"
+        (keyup.enter)="buscar()">
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        type="button"
+        class="btn-primary"
+        (click)="crear()">
+        Crear guía
+      </button>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="buscar()">
+        Consultar
+      </button>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="limpiar()">
+        Limpiar
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       CAMBIAR ESTADO
+       ========================= -->
+
+  <div
+    class="search-card"
+    *ngIf="pestana === 'estado'">
+
+    <div class="field">
+
+      <label>Número de guía</label>
+
+      <input
+        type="text"
+        [(ngModel)]="numeroGuia"
+        placeholder="Ingrese el número de guía">
+
+    </div>
+
+    <div class="field">
+
+      <label>Estado</label>
+
+      <input
+        type="text"
+        [(ngModel)]="estado"
+        placeholder="Ej: EN_CENTRO">
+
+    </div>
+
+    <div class="field">
+
+      <label>Usuario</label>
+
+      <input
+        type="text"
+        [(ngModel)]="usuarioId"
+        placeholder="Ingrese el usuario">
+
+    </div>
+
+    <div class="field">
+
+      <label>Origen</label>
+
+      <input
+        type="text"
+        [(ngModel)]="origen"
+        placeholder="Ej: SISTEMA">
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        type="button"
+        class="btn-primary"
+        (click)="cambiarEstado()">
+        Cambiar estado
+      </button>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="limpiar()">
+        Limpiar
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- =========================
+       HISTORIAL
+       ========================= -->
+
+  <div
+    class="search-card"
+    *ngIf="pestana === 'historial'">
+
+    <div class="field">
+
+      <label>Número de guía</label>
+
+      <input
+        type="text"
+        [(ngModel)]="numeroGuia"
+        placeholder="Ingrese el número de guía"
+        (keyup.enter)="consultarHistorial()">
+
+    </div>
+
+    <div class="actions">
+
+      <button
+        type="button"
+        class="btn-primary"
+        (click)="consultarHistorial()">
+        Consultar historial
+      </button>
+
+      <button
+        type="button"
+        class="btn-secondary"
+        (click)="limpiar()">
+        Limpiar
+      </button>
+
+    </div>
+
+  </div>
+
+
+  <!-- MENSAJE -->
+
+  <div
+    class="message"
+    *ngIf="mensaje">
+
+    {{ mensaje }}
+
+  </div>
+
+
+  <!-- INFORMACIÓN DE LA GUÍA -->
+
+  <div
+    class="table-card"
+    *ngIf="guia">
+
+    <div class="table-header">
+      <h2>Información de la guía</h2>
+    </div>
+
+    <table>
+
+      <tbody>
+
+        <tr>
+          <th>ID</th>
+          <td>{{ guia.id }}</td>
+        </tr>
+
+        <tr>
+          <th>Número de guía</th>
+          <td>
+            <strong>{{ guia.numeroGuia }}</strong>
+          </td>
+        </tr>
+
+        <tr>
+          <th>Estado actual</th>
+          <td>
+            <span class="estado">
+              {{ guia.estadoActual }}
+            </span>
+          </td>
+        </tr>
+
+      </tbody>
+
+    </table>
+
+  </div>
+
+
+  <!-- HISTORIAL -->
+
+  <div
+    class="timeline-card"
+    *ngIf="eventos.length > 0">
+
+    <h2>Historial de eventos</h2>
+
+    <div class="timeline">
+
+      <div
+        class="event"
+        *ngFor="let evento of eventos">
+
+        <div class="event-status">
+          {{ evento.estado }}
+        </div>
+
+        <div class="event-info">
+
+          <strong>
+            {{ evento.estado }}
+          </strong>
+
+          <span>
+            {{ evento.fechaEvento | date:'dd/MM/yyyy HH:mm' }}
+          </span>
+
+          <small>
+            Usuario: {{ evento.usuarioId }}
+          </small>
+
+          <small>
+            Origen: {{ evento.origen }}
+          </small>
+
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
